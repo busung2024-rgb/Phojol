@@ -1,0 +1,245 @@
+<!--
+Blogger-compatible single-file theme skeleton.
+Includes:
+ - Monetag ad zone (replace data-zone with your id)
+ - A simulated "Tapswp airdrop" feature (client-side demo) for user panel
+ - Simple Admin panel (static demo; replace with server-side auth for production)
+
+How to use:
+ 1. Open Blogger > Theme > Edit HTML and paste the contents of the <body> (or whole file) as needed.
+ 2. Replace `DATA_ZONE_ID` with your monetag zone id (e.g. 9722184).
+ 3. For real airdrops and admin auth, implement server-side endpoints and secure tokens.
+
+Note: This is a frontend/demo template only. Monetag and tapswp integrations here are illustrative. 
+-->
+
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SujoyUser - Demo Blogger Theme</title>
+  <style>
+    /* সিম্পল স্টাইলিং */
+    :root{--accent:#0b5cff}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,'Noto Sans Bengali',sans-serif;margin:0;background:#f7f8fb;color:#222}
+    header{background:linear-gradient(90deg,#ffffff, #f0f4ff);padding:18px 20px;box-shadow:0 1px 0 rgba(0,0,0,0.05)}
+    .container{max-width:980px;margin:24px auto;padding:0 16px}
+    nav{display:flex;gap:12px;align-items:center}
+    a.logo{font-weight:700;color:var(--accent);text-decoration:none}
+    .card{background:#fff;border-radius:10px;padding:16px;margin-bottom:16px;box-shadow:0 6px 18px rgba(12,20,40,0.04)}
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:16px}
+    .post{padding-bottom:12px}
+    .btn{display:inline-block;padding:8px 12px;border-radius:8px;text-decoration:none}
+    .btn-primary{background:var(--accent);color:#fff}
+    .muted{color:#666;font-size:14px}
+
+    /* User/Admin panel styles */
+    .panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    label{display:block;margin-bottom:6px;font-weight:600}
+    input,textarea,select{width:100%;padding:8px;border-radius:8px;border:1px solid #e3e7ef}
+    .small{font-size:13px;color:#555}
+
+    footer{padding:16px;text-align:center;color:#777;font-size:14px}
+
+    @media (max-width:880px){.grid{grid-template-columns:1fr} .panel-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between">
+      <a class="logo" href="/">SujoySite</a>
+      <nav>
+        <a class="small muted" href="#user-panel">User Panel</a>
+        <a class="small muted" href="#admin-panel">Admin Panel</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+      <section>
+        <div class="card">
+          <h2>Latest Posts</h2>
+          <article class="post">
+            <h3>ডেমো পোস্ট — Blogger থিম</h3>
+            <p class="muted">This is a demo post to show layout. আপনি এখানে আপনার ব্লগ পোস্ট যোগ করবেন।</p>
+          </article>
+
+          <!-- Monetag script: আপনার zone id বসান -->
+          <div style="margin-top:12px">
+            <!-- Replace DATA_ZONE_ID with your actual id -->
+            <script src="//libtl.com/sdk.js" data-zone="DATA_ZONE_ID" data-sdk="show_DATA_ZONE_ID"></script>
+            <noscript class="muted">Monetag ad (JavaScript চালু রাখুন)</noscript>
+          </div>
+
+        </div>
+
+        <div class="card" id="user-panel">
+          <h2>User Panel — Airdrop (Demo)</h2>
+          <p class="small">এটি কেবল ক্লায়েন্ট-সাইড ডেমো। রিয়েল টোকেন বা পেমেন্টের জন্য সার্ভার-সাইড ভেরিফিকেশন জরুরি।</p>
+
+          <div style="display:flex;gap:10px;align-items:center;margin-top:10px">
+            <div style="flex:1">
+              <label for="userId">আপনার User ID</label>
+              <input id="userId" placeholder="উদাহরণ: user_123" />
+            </div>
+            <div style="width:180px">
+              <label>&nbsp;</label>
+              <button class="btn btn-primary" id="claimBtn">Claim Airdrop</button>
+            </div>
+          </div>
+
+          <div id="airdropStatus" style="margin-top:12px" class="muted">আপনি এখনও কোনো এয়ারড্রপ ক্লেইম করেননি।</div>
+
+          <hr style="margin:14px 0" />
+
+          <h3>History</h3>
+          <ul id="historyList" class="small muted"></ul>
+
+        </div>
+
+      </section>
+
+      <aside>
+        <div class="card">
+          <h3>Site Stats (Demo)</h3>
+          <p class="small">Visitors: <strong id="visitorsCount">1,234</strong></p>
+          <p class="small">Active Users: <strong id="activeUsers">12</strong></p>
+        </div>
+
+        <div class="card" id="admin-panel">
+          <h3>Admin Panel — Demo Login</h3>
+          <form id="adminForm" onsubmit="return false;">
+            <label for="adminUser">Username</label>
+            <input id="adminUser" value="admin" />
+            <label for="adminPass">Password</label>
+            <input id="adminPass" type="password" value="admin123" />
+            <div style="margin-top:10px;display:flex;gap:8px">
+              <button class="btn btn-primary" id="adminLogin">Login</button>
+              <button class="btn" id="logoutBtn" style="display:none">Logout</button>
+            </div>
+          </form>
+
+          <div id="adminControls" style="display:none;margin-top:12px">
+            <h4>Quick Controls</h4>
+            <div class="panel-grid">
+              <div>
+                <label>Update Announcement</label>
+                <textarea id="announcement" rows="3">Welcome to Sujoy Demo Site</textarea>
+                <button class="btn" style="margin-top:8px" id="saveAnnouncement">Save</button>
+              </div>
+              <div>
+                <label>Monetag Zone</label>
+                <input id="zoneInput" value="DATA_ZONE_ID" />
+                <button class="btn" style="margin-top:8px" id="saveZone">Update Zone</button>
+              </div>
+            </div>
+            <div style="margin-top:12px" class="small muted">Note: Admin actions here only update local demo state. Implement server APIs to persist changes.</div>
+          </div>
+
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    © Sujoy Demo — This is a template. Replace demo values with real integration details.
+  </footer>
+
+  <script>
+    // ---------- Simple demo logic (client-side only) ----------
+    (function(){
+      const claimBtn = document.getElementById('claimBtn');
+      const userIdInput = document.getElementById('userId');
+      const airdropStatus = document.getElementById('airdropStatus');
+      const historyList = document.getElementById('historyList');
+
+      // localStorage-backed demo history
+      function loadHistory(){
+        const raw = localStorage.getItem('airdrop_history') || '[]';
+        try{ return JSON.parse(raw); }catch(e){ return [] }
+      }
+      function saveHistory(h){ localStorage.setItem('airdrop_history', JSON.stringify(h)); }
+      function renderHistory(){
+        const h = loadHistory();
+        historyList.innerHTML = h.map(item=>`<li>${item.time} — ${item.user} — ${item.amount} coins</li>`).join('') || '<li class="muted">কোনও রেকর্ড নেই</li>';
+      }
+      renderHistory();
+
+      claimBtn.addEventListener('click', ()=>{
+        const user = (userIdInput.value||'').trim();
+        if(!user){ alert('অনুগ্রহ করে আপনার User ID দিন'); return; }
+        // Demo: prevent multi-claims within 24 hours client-side
+        const history = loadHistory();
+        const last = history.find(h=>h.user===user);
+        if(last){
+          airdropStatus.textContent = 'আপনি ইতোমধ্যেই এয়ারড্রপ ক্লেইম করেছেন (ডেমো)।';
+          return;
+        }
+        // Simulate random amount
+        const amount = Math.floor(Math.random()*100)+10;
+        const now = new Date();
+        const record = {user,amount,time: now.toLocaleString()};
+        history.unshift(record);
+        saveHistory(history);
+        renderHistory();
+        airdropStatus.textContent = `Congratulations! আপনি ${amount} coins পেয়েছেন (ডেমো)`;
+      });
+
+      // ------------ Admin demo logic ------------
+      const adminLogin = document.getElementById('adminLogin');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const adminControls = document.getElementById('adminControls');
+      const announcement = document.getElementById('announcement');
+      const saveAnnouncement = document.getElementById('saveAnnouncement');
+      const zoneInput = document.getElementById('zoneInput');
+      const saveZone = document.getElementById('saveZone');
+
+      function doLogin(){
+        const u = document.getElementById('adminUser').value;
+        const p = document.getElementById('adminPass').value;
+        // Demo credentials check. Replace with server auth.
+        if(u==='admin' && p==='admin123'){
+          adminControls.style.display = 'block';
+          logoutBtn.style.display = 'inline-block';
+          adminLogin.style.display = 'none';
+          alert('Admin logged in (demo)');
+        } else {
+          alert('Invalid admin credentials (demo)');
+        }
+      }
+      function doLogout(){
+        adminControls.style.display = 'none';
+        logoutBtn.style.display = 'none';
+        adminLogin.style.display = 'inline-block';
+      }
+      adminLogin.addEventListener('click', doLogin);
+      logoutBtn.addEventListener('click', doLogout);
+
+      saveAnnouncement.addEventListener('click', ()=>{
+        const text = announcement.value;
+        alert('Announcement saved (demo): ' + text);
+      });
+      saveZone.addEventListener('click', ()=>{
+        const zone = zoneInput.value.trim();
+        if(!zone){alert('Enter zone id'); return}
+        // Update Monetag script data attribute in DOM for demo only.
+        const scr = document.querySelector('script[src*="libtl.com/sdk.js"]');
+        if(scr) {
+          scr.setAttribute('data-zone', zone);
+          scr.setAttribute('data-sdk', 'show_' + zone);
+          alert('Monetag zone updated in DOM (demo). Replace in template for persistence.');
+        }
+      });
+
+      // small site stats randomizer (demo)
+      setInterval(()=>{
+        document.getElementById('visitorsCount').textContent = (1200 + Math.floor(Math.random()*500));
+        document.getElementById('activeUsers').textContent = (5 + Math.floor(Math.random()*30));
+      },5000);
+
+    })();
+  </script>
+</body>
+</html>
